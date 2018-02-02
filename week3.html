@@ -63,13 +63,304 @@
 	 <img src="Screen Shot 2018-01-27 at 11.42.06 PM.png" style="width:70%">
 	</br> </br> </br>
 
+
+================================================================
+<h2>I'm working in this code</h2>
 <h3> <a href="index.html"> Back to Home Page </a> </h3>
 </br></br>
 	  <h2 id="JavaCollections">Java Collections</h2>
 	  
-	  <h3> I'm working on thi stopic </h3>
+	  <h3> Collections </h3>
+package collections;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class MyArrayList {
+
+    public static void main(String[] args) {
+
+        // create a list using the
+        List<String> list = Arrays.asList("Lars", "Simon");
+
+        // alternatively
+        List<String> anotherList = new ArrayList<>();
+        anotherList.add("Lars");
+        anotherList.add("Simon");
+
+
+        // print each element to the console using method references
+        list.forEach(System.out::println);
+        anotherList.forEach(System.out::println);
+
+    }
+}
+		
 	  
-	  <h3> </h3>
+<h3> Array List and Linked List</h3>
+package com.vogella.java.collections.list;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ListExample {
+    public static void main(String[] args) {
+        // use type inference for ArrayList
+        List<Integer> list = Arrays.asList(3,2,1,4,5,6,6);
+
+        // alternative you can declare the list via:
+        // List<Integer> list = new ArrayList<>();
+        // and use list.add(element); to add elements
+        for (Integer integer : list) {
+            System.out.println(integer);
+        }
+    }
+
+}
+		
+<h3>Sorting List</h3>
+package com.vogella.java.collections.list;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ListSorter {
+    public static void main(String[] args) {
+        System.out.println("Sorting with natural order");
+        List<String> l1 = createList();
+        l1.sort(null);
+        l1.forEach(System.out::println);
+
+        System.out.println("Sorting with a lamba expression for the comparison");
+        List<String> l2 = createList();
+        l2.sort((s1, s2) -> s1.compareToIgnoreCase(s2));  // sort ignoring case
+        l2.forEach(System.out::println);
+
+        System.out.println("Sorting with a method references");
+        List<String> l3 = createList();
+        l3.sort(String::compareToIgnoreCase);
+        l3.forEach(System.out::println);
+
+    }
+
+    private static List<String>  createList() {
+        return Arrays.asList("iPhone", "Ubuntu", "Android", "Mac OS X");
+    }
+
+}
+		
+<h3>Remove List Members</h3>
+package com.vogella.java.collections.list;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class RemoveIfList {
+    public static void main(String[] args) {
+        System.out.println("Demonstration of removeIf");
+        List<String> l1 = createList();
+        // remove all items which contains an "x"
+        l1.removeIf(s-> s.toLowerCase().contains("x"));
+        l1.forEach(s->System.out.println(s));
+    }
+
+    private static List<String>  createList() {
+        List<String> anotherList = new ArrayList<>();
+        anotherList.addAll(Arrays.asList("iPhone", "Ubuntu", "Android",
+        "Mac OS X"));
+        return anotherList;
+    }
+}
+		
+<h3>Map Implementation</h3>
+package com.vogella.java.collections.map;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class MapTester {
+    public static void main(String[] args) {
+
+        // keys are Strings
+        // objects are also Strings
+        Map<String, String> map = new HashMap<>();
+        fillData(map);
+
+        // write to command line
+        map.forEach((k, v) -> System.out.printf("%s %s%n", k, v));
+
+        // add and remove from the map
+        map.put("iPhone", "Created by Apple");
+        map.remove("Android");
+
+        // write again to command line
+        map.forEach((k, v) -> System.out.printf("%s %s%n", k, v));
+
+    }
+
+    private static void fillData(Map<String, String> map) {
+        map.put("Android", "Mobile");
+        map.put("Eclipse IDE", "Java");
+        map.put("Eclipse RCP", "Java");
+        map.put("Git", "Version control system");
+
+    }
+
+}
+		
+<H3>Convert Keys in Map to a Array</h3>
+package com.vogella.java.collections.map;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ConvertMapTester {
+    public static void main(String[] args) {
+
+        // keys are Strings
+        // objects are also Strings
+        Map<String, String> map = new HashMap<>();
+        fillData(map);
+
+        // convert keys to array
+        String[] strings = keysAsArray(map);
+        for (String string : strings) {
+            System.out.println(string);
+        }
+        // convert keys to list
+        List<String> list = keysAsList(map);
+        for (String string : list) {
+            System.out.println(string);
+        }
+    }
+
+    private static void fillData(Map<String, String> map) {
+        map.put("Android", "Mobile");
+        map.put("Eclipse IDE", "Java");
+        map.put("Eclipse RCP", "Java");
+        map.put("Git", "Version control system");
+
+    }
+
+    private static String[] keysAsArray(Map<String, String> map) {
+        return map.keySet().toArray(new String[map.keySet().size()]);
+    }
+
+    // assumes the key is of type String
+    private static List<String> keysAsList(Map<String, String> map) {
+        List<String> list = new ArrayList<String>(map.keySet());
+        return list;
+    }
+
+}
+		
+<H3>Getting the Current Value</h3>
+package com.vogella.java.collections.map;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class MapOrDefault {
+    public static void main(String[] args) {
+
+        Map<String,Integer> map = createMap();
+        map.put("Android", 1 + map.getOrDefault("Android", 0));
+
+        // write to command line
+        map.forEach((k, v) -> System.out.printf("%s %s%n", k, v));
+    }
+
+    private static Map<String, Integer> createMap() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("Eclipse IDE", 0);
+        map.put("Eclipse RCP", 0);
+        map.put("Git", 0);
+        return map;
+    }
+}
+		
+package com.vogella.java.collections.map;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class ComputeIfAbsent {
+    public static void main(String[] args) {
+
+        Map<String,Integer> map = createMap();
+
+        Integer calculatedVaue = map.computeIfAbsent("Java", it -> 0);
+        System.out.println(calculatedVaue);
+
+        // write to command line
+        map.keySet().forEach(
+                key -> System.out.println(key + " " + map.get(key)));
+    }
+
+    private static Map<String, Integer> createMap() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("Eclipse IDE", 0);
+        map.put("Eclipse RCP", 0);
+        map.put("Git", 0);
+        map.put("Groovy", 0);
+        return map;
+    }
+}
+
+package collections;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class Simple {
+    public static void main(String[] args) {
+        // create a new ArrayList with the Arrays.asList helper method
+        List<Integer> list = Arrays.asList(5,4,3,7,2,1);
+        // sort it
+        Collections.sort(list);
+        // print each element to the console
+        list.forEach(System.out::println);
+    }
+}
+
+
+package collections;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class ListCustomSorterExample {
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(5,4,3,7,2,1);
+
+        // custom comparator
+        Collections.sort(list, (o1, o2) -> (o1>o2 ? -1 : (o1==o2 ? 0 : 1)));
+        // alternative can could reuse the integer comparator
+        // Collections.sort(list, Integer::);
+        list.forEach(System.out::println);
+    }
+
+}
+		
+		
+package com.vogella.java.collections;
+
+public class Server {
+    private String url;
+}
+		
+public static void main(String[] args) {
+    List<Server> list = new ArrayList<Server>();
+    list.add(new Server("http://www.vogella.com"));
+    list.add(new Server("http://www.google.com"));
+    list.add(new Server("http://www.heise.de"));
+}
+		
+
 	   
 		
 	<footer>
