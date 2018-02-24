@@ -1,0 +1,329 @@
+
+
+	
+    <h3>Application Controller Pattern & Model View Controller</h3>
+ 
+     <h5>Grocery List</h5>
+
+     <h6>Add Item to a grocery list</h6>
+     <p>Add one item at a time in the white box. To remove items, check-mark the desired name, and click the "Delete Items" radio button</p>
+
+         <!-- Creates groceryList containers-->     
+
+            <div class="js-container">
+
+                <input type="text" class="item-textbox">
+                <input type="button" class="add-item-button" style="color:#B16290" value="Add Item">
+
+                <div class="items-container"></div>
+                <!-- end item -->
+                <input type="button" class="complete-item-button" style="color:#B16290" value="Completed Items">
+                <input type="button" class="delete-item-button" style="color:#B16290" value="Delete Items">
+
+            </div>
+
+        <!-- create an EventOrganizer -->
+
+        <script>
+            var Event = function (organizer) {
+            this._organizer = organizer;
+            this._observers = [];
+        }
+
+        Event.prototype = {
+
+            attach: function (observer) {
+                this._observers.push(observer);
+            },
+
+            notify: function (args) {
+                for (var i = 0; i < this._observers.length; i += 1) {
+                    this._observers[i](this._organizer, args);
+                }
+            }
+
+        };
+
+        //-- Create ItemModel 
+
+        var ItemModel = function () {
+             this.items = [];
+             this.selectedItems = [];
+             this.addItemEvent = new Event(this);
+             this.removeItemEvent = new Event(this);
+             this.setItemsAsCompletedEvent = new Event(this);
+             this.deleteItemsEvent = new Event(this);
+
+         };
+
+         ItemModel.prototype = {
+
+             addItem: function (item) {
+                 this.items.push({
+                     itemName: item,
+                     itemStatus: 'uncompleted'
+                 });
+                 this.addItemEvent.notify();
+             },
+
+             getItems: function () {
+                 return this.items;
+             },
+
+             setSelectedItem: function (itemGroceryList) {
+                 this.selectedItems.push(itemGroceryList);
+             },
+
+             unselectItem: function (itemGroceryList) {
+                 this.selectedItems.splice(itemGroceryList, 1);
+             },
+
+             setItemsAsCompleted: function () {
+                 var selectedItems = this.selectedItems;
+                 for (var groceryList in selectedItems) {
+                     this.items[selectedItems[groceryList]].itemStatus = 'completed';
+                 }
+
+                 this.setItemsAsCompletedEvent.notify();
+
+                 this.selectedItems = [];
+
+             },
+
+
+             deleteItems: function () {
+                 var selectedItems = this.selectedItems.sort();
+
+                 for (var i = selectedItems.length - 1; i >= 0; i--) {
+                     this.items.splice(this.selectedItems[i], 1);
+                 }
+
+                 // clear the selected items
+                 this.selectedItems = [];
+
+                 this.deleteItemsEvent.notify();
+
+             }
+
+         };
+
+        //--Create ItemView  
+
+        var ItemView = function (model) {
+            this.model = model;
+            this.addItemEvent = new Event(this);
+            this.selectItemEvent = new Event(this);
+            this.unselectItemEvent = new Event(this);
+            this.completeItemEvent = new Event(this);
+            this.deleteItemEvent = new Event(this);
+
+            this.init();
+        };
+
+        ItemView.prototype = {
+
+            init: function () {
+                this.createChildren()
+                    .setupDealings()
+                    .enable();
+            },
+
+            createChildren: function () {
+                // cache the document object
+                this.$container = $('.js-container');
+                this.$addItemButton = this.$container.find('.add-item-button');
+                this.$itemTextBox = this.$container.find('.item-textbox');
+                this.$itemsContainer = this.$container.find('.items-container');
+
+                return this;
+            },
+
+            setupDealings: function () {
+
+                this.addItemButtonDealing = this.addItemButton.bind(this);
+                this.selectOrUnselectItemDealing = this.selectOrUnselectItem.bind(this);
+                this.completeItemButtonDealing = this.completeItemButton.bind(this);
+                this.deleteItemButtonDealing = this.deleteItemButton.bind(this);
+
+                /* Dealings from Event Dispatcher */
+                this.addItemDealing = this.addItem.bind(this);
+                this.clearItemTextBoxDealing = this.clearItemTextBox.bind(this);
+                this.setItemsAsCompletedDealing = this.setItemsAsCompleted.bind(this);
+                this.deleteItemsDealing = this.deleteItems.bind(this);
+
+                return this;
+            },
+
+            enable: function () {
+
+                this.$addItemButton.click(this.addItemButtonDealing);
+                this.$container.on('click', '.item', this.selectOrUnselectItemDealing);
+                this.$container.on('click', '.complete-item-button', this.completeItemButtonDealing);
+                this.$container.on('click', '.delete-item-button', this.deleteItemButtonDealing);
+
+                /* Event Dispatcher */
+                this.model.addItemEvent.attach(this.addItemDealing);
+                this.model.addItemEvent.attach(this.clearItemTextBoxDealing);
+                this.model.setItemsAsCompletedEvent.attach(this.setItemsAsCompletedDealing);
+                this.model.deleteItemsEvent.attach(this.deleteItemsDealing);
+
+                return this;
+            },
+
+            addItemButton: function () {
+                this.addItemEvent.notify({
+                    item: this.$itemTextBox.val()
+                });
+            },
+
+            completeItemButton: function () {
+                this.completeItemEvent.notify();
+            },
+
+            deleteItemButton: function () {
+                this.deleteItemEvent.notify();
+            },
+
+            selectOrUnselectItem: function () {
+
+                var itemGroceryList = $(event.target).attr("data-groceryList");
+
+                if ($(event.target).attr('data-item-selected') == 'false') {
+                    $(event.target).attr('data-item-selected', true);
+                    this.selectItemEvent.notify({
+                        itemGroceryList: itemGroceryList
+                    });
+                } else {
+                    $(event.target).attr('data-item-selected', false);
+                    this.unselectItemEvent.notify({
+                        itemGroceryList: itemGroceryList
+                    });
+                }
+
+            },
+
+            show: function () {
+                this.buildList();
+            },
+
+            buildList: function () {
+                var items = this.model.getItems();
+                var html = "";
+                var $itemsContainer = this.$itemsContainer;
+
+                $itemsContainer.html('');
+
+                var groceryList = 0;
+                for (var item in items) {
+
+                    if (items[item].itemStatus == 'completed') {
+                        html += '<div style="color: pink;">';
+                    } else {
+                        html += "<div>";
+                    }
+
+                    $itemsContainer.append(html + '<label><input type="checkbox" class="item" data-groceryList="" =""="" +="" groceryList="" +="" =""="" data-item-selected="false">' + items[item].itemName + "</label></div>");
+
+                    groceryList++;
+                }
+
+            },
+
+            // -- Dealings From Event Organizer 
+
+            clearItemTextBox: function () {
+                this.$itemTextBox.val('');
+            },
+
+            addItem: function () {
+                this.show();
+            },
+
+            setItemsAsCompleted: function () {
+                this.show();
+
+            },
+
+            deleteItems: function () {
+                this.show();
+
+            }
+
+
+        };
+
+        // Create ItemController 
+
+        var ItemController = function (model, view) {
+            this.model = model;
+            this.view = view;
+
+            this.init();
+        };
+
+        ItemController.prototype = {
+
+            init: function () {
+                this.createChildren()
+                    .setupDealings()
+                    .enable();
+            },
+
+            createChildren: function () {
+                return this;
+            },
+
+            setupDealings: function () {
+
+                this.addItemDealing = this.addItem.bind(this);
+                this.selectItemDealing = this.selectItem.bind(this);
+                this.unselectItemDealing = this.unselectItem.bind(this);
+                this.completeItemDealing = this.completeItem.bind(this);
+                this.deleteItemDealing = this.deleteItem.bind(this);
+                return this;
+            },
+
+            enable: function () {
+
+                this.view.addItemEvent.attach(this.addItemDealing);
+                this.view.completeItemEvent.attach(this.completeItemDealing);
+                this.view.deleteItemEvent.attach(this.deleteItemDealing);
+                this.view.selectItemEvent.attach(this.selectItemDealing);
+                this.view.unselectItemEvent.attach(this.unselectItemDealing);
+
+                return this;
+            },
+
+
+            addItem: function (organizer, args) {
+                this.model.addItem(args.item);
+            },
+
+            selectItem: function (organizer, args) {
+                this.model.setSelectedItem(args.itemGroceryList);
+            },
+
+            unselectItem: function (organizer, args) {
+                this.model.unselectItem(args.itemGroceryList);
+            },
+
+            completeItem: function () {
+                this.model.setItemsAsCompleted();
+            },
+
+            deleteItem: function () {
+                this.model.deleteItems();
+            }
+
+        };
+
+        // Create App 
+
+        $(function () {
+             var model = new ItemModel(),
+                 view = new ItemView(model),
+                 controller = new ItemController(model, view);
+         });
+
+        </script>
+     
