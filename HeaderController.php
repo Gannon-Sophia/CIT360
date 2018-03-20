@@ -78,17 +78,17 @@ a:active  {
 <nav >
     <ul class="primary-nav">
 		
-        <li><a href="/index.php">Home</a></li>
+        <li<?php if($activePage=='home') {?> class="active"<?php } //endif ?>><a href="/index.php">Home</a></li>
         
-        <li><a href="/journey/journey.php">Journey</a></li> 
+        <li<?php if($activePage=='journey') {?> class="active"<?php } //endif ?>><a href="/journey/journey.php">Journey</a></li> 
         
-        <li><a href="/beliefs/beliefs.php">Beliefs</a></li> 
+        <li<?php if($activePage=='beliefs') {?> class="active"<?php } //endif ?>><a href="/beliefs/beliefs.php">Beliefs</a></li> 
         
-        <li><a href="/recipes/recipes.php">Recipes</a></li>  
+        <li<?php if($activePage=='recipes') {?> class="active"<?php } //endif ?>><a href="/recipes/recipes.php">Recipes</a></li>  
         
-        <li><a href="/sysadmin/sysadmin.php">sysadmin</a></li> 
+        <li<?php if($activePage=='sysadmin') {?> class="active"<?php } //endif ?>><a href="/sysadmin/sysadmin.php">sysadmin</a></li> 
         
-        <li class="parents"><a href="/projects/projects.php">Projects</a>
+        <li<?php if($activePage=='projects') {?> class="active"<?php } //endif ?> class="parents"><a href="/projects/projects.php">Projects</a>
             <ul>
                 <li><a href="/projects/CIT261Project/cit261Project.php">CIT261 Project</a></li>
                 <li><a href="/projects/CIT360Project/cit360Project.php">CIT360 Project</a></li>
@@ -97,7 +97,7 @@ a:active  {
             </ul>
         </li>  
         
-        <li class="parents" ><a href="/mobileSoftware/mobileSoftware.php">MobileSoft</a>
+        <li<?php if($activePage=='mobileSoftware') {?> class="active"<?php } //endif ?> class="parents" ><a href="/mobileSoftware/mobileSoftware.php">MobileSoft</a>
             <ul>
                 <li><a href="/mobileSoftware/javaScript.php">JavaScript</a></li>
                 <li><a href="/mobileSoftware/javaScriptObject.php">javaScript Object</a></li>
@@ -114,7 +114,7 @@ a:active  {
             </ul>
         </li>
     
-        <li class="parents" ><a href="/ooprogramming/ooprogramming.php">SoftDevelop</a>
+        <li<?php if($activePage=='ooprogramming') {?> class="active"<?php } //endif ?> class="parents" ><a href="/ooprogramming/ooprogramming.php">SoftDevelop</a>
             <ul>
                 <li><a href="/ooprogramming/mvc.php">MVC, DOM, and Json</a></li>
                 <li><a href="/ooprogramming/servlets.php">Servlets</a></li>
@@ -125,14 +125,14 @@ a:active  {
             </ul>
         </li>
         
-		<li><a href="/about/about.php">About</a>
+		<li<?php if($activePage=='about') {?> class="active"<?php } //endif ?>><a href="/about/about.php">About</a>
             <ul>
-                <li><a href="/about/coverLetter.php">Cover Letter</a></li>
-                <li><a href="/about/resume.php">Resume</a></li>
+                <li<?php if($activePage=='coverLetter') {?> class="active"<?php } //endif ?>><a href="/about/coverLetter.php">Cover Letter</a></li>
+                <li<?php if($activePage=='resume') {?> class="active"<?php } //endif ?>><a href="/about/resume.php">Resume</a></li>
             </ul>
         </li>
         
-		<li><a href="/contact.php">Contact</a></li>
+		<li<?php if($activePage=='contact') {?> class="active"<?php } //endif ?>><a href="/contact.php">Contact</a></li>
         
     </ul>
 	<!-- PHONE HAMBURGER BUTTON -->
@@ -141,23 +141,9 @@ a:active  {
 <div class="keepOpen"></div> 
 	
 </nav>
-
-
-
-    </section> 
-   </main> 
-     
-  
-
-
- <footer>
-	 <ul style="none">
-		 <li>&copy; 2018 &bull; Sophia Gannon &copy; <a href="/siteplan.php">Site Plan</a></li>
-         <li>&copy;Sophie's &bull; GitHub &copy; <a href="https://github.com/Gannon-Sophia">My GitHub</a></li>
-		 <li> CIT230-Group Assignment <a href="http://pinelodgedoods.com/design-principles.html" target="_blank"> Presentation </a></li>
-	</ul>
-</footer>
- 
- </body>
-</html>
- 
+	 
+	 
+	 
+	 
+	 
+	 
