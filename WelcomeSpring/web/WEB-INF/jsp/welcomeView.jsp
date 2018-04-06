@@ -9,10 +9,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>My MVC Test Project</title>
+        <title>Hello</title>
     </head>
     <body>
-        <h3>What is MVC?</h3>
+        <h1>${welcomeMessage}</h1>
+        <h3>This is a MVC project</h3>
         <p>Model - The model represents data and the rules that govern access to and updates of this data.<br>
             In enterprise software, a model often serves as a software approximation of a real-world process.</p>
         <p>View - The view renders the contents of a model. It specifies exactly how the model data should be presented.<br>
